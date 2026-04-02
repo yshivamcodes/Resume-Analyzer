@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered Resume Analyzer — Optimize your resume for ATS systems and recruiters with intelligent scoring, skill matching, and AI-generated improvement suggestions.">
+    <title>AI Resume Analyzer — Optimize Your Resume</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+    <!-- ========== PARTICLES BACKGROUND ========== -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ========== HERO SECTION ========== -->
+    <header class="hero" id="hero">
+        <div class="hero-glow"></div>
+        <nav class="nav">
+            <div class="nav-logo">
+                <span class="logo-icon">◈</span>
+                <span class="logo-text">ResumeAI</span>
+            </div>
+            <div class="nav-links">
+                <a href="#analyzer" class="nav-link">Analyzer</a>
+                <a href="#features" class="nav-link">Features</a>
+                <span class="nav-badge">v1.0</span>
+            </div>
+        </nav>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                AI-Powered Analysis
+            </div>
+            <h1 class="hero-title">
+                AI Resume<br>
+                <span class="gradient-text">Analyzer</span>
+            </h1>
+            <p class="hero-subtitle">
+                Optimize your resume for ATS systems and recruiters.<br>
+                Get instant match scores, skill analysis, and AI-powered improvement suggestions.
+            </p>
+            <a href="#analyzer" class="hero-cta" id="heroCtaBtn">
+                <span>Start Analyzing</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- ========== ANALYZER SECTION ========== -->
+    <main class="analyzer-section" id="analyzer">
+        <div class="section-header">
+            <h2 class="section-title">Upload & Analyze</h2>
+            <p class="section-desc">Upload your resume and paste the job description to get started.</p>
+        </div>
+
+        <!-- Role Selector -->
+        <div class="role-selector" id="roleSelector">
+            <button class="role-btn active" data-role="general">🎯 General</button>
+            <button class="role-btn" data-role="ml-engineer">🤖 ML Engineer</button>
+            <button class="role-btn" data-role="data-scientist">📊 Data Scientist</button>
+            <button class="role-btn" data-role="web-developer">🌐 Web Developer</button>
+            <button class="role-btn" data-role="backend-developer">⚙️ Backend Dev</button>
+        </div>
+
+        <div class="input-grid">
+            <!-- LEFT: Resume Upload -->
+            <div class="input-card" id="uploadCard">
+                <div class="card-header">
+                    <span class="card-icon">📄</span>
+                    <h3>Resume Upload</h3>
+                </div>
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <p class="upload-text">Drag & drop your resume here</p>
+                    <p class="upload-subtext">or click to browse • PDF only</p>
+                    <input type="file" id="resumeInput" accept=".pdf" hidden>
+                </div>
+                <div class="file-info hidden" id="fileInfo">
+                    <div class="file-badge">
+                        <span class="file-icon">📎</span>
+                        <span class="file-name" id="fileName">resume.pdf</span>
+                        <button class="file-remove" id="fileRemove" title="Remove file">✕</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Job Description -->
+            <div class="input-card" id="jdCard">
+                <div class="card-header">
+                    <span class="card-icon">📋</span>
+                    <h3>Job Description</h3>
+                </div>
+                <textarea
+                    class="jd-textarea"
+                    id="jdTextarea"
+                    placeholder="Paste the full job description here...&#10;&#10;Include responsibilities, requirements, and preferred qualifications for the most accurate analysis."
+                    rows="12"
+                ></textarea>
+                <div class="textarea-footer">
+                    <span class="char-count" id="charCount">0 characters</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Button -->
+        <div class="cta-wrapper">
+            <button class="analyze-btn" id="analyzeBtn" disabled>
+                <span class="btn-text">Analyze Resume</span>
+                <span class="btn-loader hidden" id="btnLoader">
+                    <span class="spinner"></span>
+                    Analyzing...
+                </span>
+            </button>
+        </div>
+    </main>
+
+    <!-- ========== LOADING OVERLAY ========== -->
+    <div class="loading-overlay hidden" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-rings">
+                <div class="ring ring-1"></div>
+                <div class="ring ring-2"></div>
+                <div class="ring ring-3"></div>
+            </div>
+            <h3 class="loading-title" id="loadingTitle">Analyzing your resume…</h3>
+            <p class="loading-step" id="loadingStep">Extracting text from PDF</p>
+            <div class="loading-progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== RESULTS SECTION ========== -->
+    <section class="results-section hidden" id="resultsSection">
+        <div class="section-header">
+            <h2 class="section-title">Analysis Results</h2>
+            <p class="section-desc">Here's how your resume stacks up against the job description.</p>
+        </div>
+
+        <!-- Score Overview -->
+        <div class="score-overview" id="scoreOverview">
+            <!-- Main Circular Score -->
+            <div class="score-circle-wrapper">
+                <div class="score-circle" id="scoreCircle">
+                    <svg viewBox="0 0 200 200" class="score-svg">
+                        <circle cx="100" cy="100" r="88" class="score-bg-ring"/>
+                        <circle cx="100" cy="100" r="88" class="score-ring" id="scoreRing"
+                            stroke-dasharray="553"
+                            stroke-dashoffset="553"/>
+                    </svg>
+                    <div class="score-value">
+                        <span class="score-number" id="scoreNumber">0</span>
+                        <span class="score-percent">%</span>
+                    </div>
+                    <div class="score-label">Overall Match</div>
+                </div>
+            </div>
+
+            <!-- Breakdown Bars -->
+            <div class="breakdown-grid">
+                <div class="breakdown-card">
+                    <div class="breakdown-header">
+                        <span class="breakdown-icon">🧠</span>
+                        <span class="breakdown-title">Semantic Match</span>
+                        <span class="breakdown-value" id="semanticValue">0%</span>
+                    </div>
+                    <div class="breakdown-bar">
+                        <div class="breakdown-fill semantic" id="semanticBar" style="width: 0%"></div>
+                    </div>
+                    <p class="breakdown-desc">How closely your resume's content mirrors the JD's context</p>
+                </div>
+
+                <div class="breakdown-card">
+                    <div class="breakdown-header">
+                        <span class="breakdown-icon">🔑</span>
+                        <span class="breakdown-title">Keyword Match</span>
+                        <span class="breakdown-value" id="keywordsValue">0%</span>
+                    </div>
+                    <div class="breakdown-bar">
+                        <div class="breakdown-fill keywords" id="keywordsBar" style="width: 0%"></div>
+                    </div>
+                    <p class="breakdown-desc">Percentage of important JD keywords found in your resume</p>
+                </div>
+
+                <div class="breakdown-card">
+                    <div class="breakdown-header">
+                        <span class="breakdown-icon">🏷️</span>
+                        <span class="breakdown-title">Skills Overlap</span>
+                        <span class="breakdown-value" id="skillsValue">0%</span>
+                    </div>
+                    <div class="breakdown-bar">
+                        <div class="breakdown-fill skills" id="skillsBar" style="width: 0%"></div>
+                    </div>
+                    <p class="breakdown-desc">Technical skills from the JD that appear in your resume</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="skills-section">
+            <div class="skills-column">
+                <h3 class="skills-heading matched-heading">
+                    <span class="skills-dot matched-dot"></span>
+                    Matched Skills
+                    <span class="skills-count" id="matchedCount">0</span>
+                </h3>
+                <div class="skills-tags" id="matchedSkills">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+            <div class="skills-column">
+                <h3 class="skills-heading missing-heading">
+                    <span class="skills-dot missing-dot"></span>
+                    Missing Skills
+                    <span class="skills-count" id="missingCount">0</span>
+                </h3>
+                <div class="skills-tags" id="missingSkills">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Explainability Section -->
+        <div class="explanations-section" id="explanationsSection">
+            <h3 class="explain-title">
+                <span>❓</span> Why This Score?
+            </h3>
+            <div class="explanations-grid" id="explanationsGrid">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+
+        <!-- Suggestions Section -->
+        <div class="suggestions-section" id="suggestionsSection">
+            <h3 class="suggestions-title">
+                <span>💡</span> AI Improvement Suggestions
+            </h3>
+            <div class="suggestions-grid" id="suggestionsGrid">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+
+        <!-- Rewrite Section -->
+        <div class="rewrite-section" id="rewriteSection">
+            <h3 class="rewrite-title">
+                <span>✍️</span> Bullet Point Rewriter
+            </h3>
+            <p class="rewrite-desc">Paste a section of your resume below to get a professional rewrite.</p>
+            <div class="rewrite-container">
+                <textarea class="rewrite-input" id="rewriteInput" placeholder="Paste your resume text here to improve it..." rows="5"></textarea>
+                <button class="rewrite-btn" id="rewriteBtn">
+                    <span class="btn-text">Improve This</span>
+                    <span class="btn-loader hidden" id="rewriteLoader">
+                        <span class="spinner"></span>
+                    </span>
+                </button>
+                <div class="rewrite-output hidden" id="rewriteOutput">
+                    <h4>Improved Version:</h4>
+                    <pre class="rewrite-result" id="rewriteResult"></pre>
+                    <button class="copy-btn" id="copyRewriteBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export -->
+        <div class="export-section">
+            <button class="export-btn" id="exportBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export Analysis Report
+            </button>
+        </div>
+    </section>
+
+    <!-- ========== FEATURES SECTION ========== -->
+    <section class="features-section" id="features">
+        <div class="section-header">
+            <h2 class="section-title">Powered by Intelligence</h2>
+            <p class="section-desc">Advanced features that set your resume apart.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Smart Scoring</h3>
+                <p>Multi-dimensional analysis combining semantic understanding, keyword matching, and skill overlap.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>Explainable AI</h3>
+                <p>Understand exactly why your score is what it is — not just a number, but actionable insight.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✍️</div>
+                <h3>AI Rewriting</h3>
+                <p>Transform weak bullet points into powerful, ATS-optimized statements with one click.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Role-Specific</h3>
+                <p>Tailored analysis for ML Engineers, Data Scientists, Web Developers, and more.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="logo-icon">◈</span>
+                <span>ResumeAI</span>
+            </div>
+            <p class="footer-text">Built with AI. Designed for job seekers.</p>
+        </div>
+    </footer>
+
+    <script src="/scripts/app.js"></script>
+</body>
+</html>
