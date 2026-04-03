@@ -97,13 +97,13 @@ Resume-Analyzer/
 │       ├── skills.py
 │       ├── scoring.py
 │       └── ai_module.py
+|   |__ requirements.txt
 │
 ├── public/
 │   ├── index.html
 │   ├── styles/
 │   └── scripts/
 │
-├── requirements.txt
 └── vercel.json
 ```
 
