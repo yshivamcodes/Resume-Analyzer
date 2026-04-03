@@ -3,7 +3,7 @@
    ================================================================ */
 
 // ==================== CONFIG ====================
-const API_BASE = window.location.origin;
+const API_BASE = "https://resume-analyzer-api-go7i.onrender.com";
 
 // ==================== DOM REFERENCES ====================
 const uploadZone = document.getElementById('uploadZone');
