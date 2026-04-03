@@ -1,0 +1,6 @@
+fastapi
+mangum
+python-multipart
+scikit-learn
+pdfplumber
+openai
