@@ -6,10 +6,10 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
-from .utils.parser import extract_text_from_pdf
-from .utils.skills import extract_skills, extract_skills_dynamic
-from .utils.scoring import compute_final_score, generate_explanations
-from .utils.ai_module import generate_suggestions, rewrite_bullet_points
+from utils.parser import extract_text_from_pdf
+from utils.skills import extract_skills, extract_skills_dynamic
+from utils.scoring import compute_final_score, generate_explanations
+from utils.ai_module import generate_suggestions, rewrite_bullet_points
 
 app = FastAPI(
     title="AI Resume Analyzer API",
