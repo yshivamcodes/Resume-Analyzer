@@ -6,7 +6,7 @@
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)
 ![Status](https://img.shields.io/badge/Status-Live-success)
 
-> A production-ready AI system that evaluates resumes against job descriptions using NLP, semantic similarity, and skill intelligence — delivering explainable match scores and actionable improvement suggestions.
+> A production-ready AI system that evaluates resumes against job descriptions using NLP, semantic similarity, and skill intelligence, delivering explainable match scores and actionable improvement suggestions.
 
 ---
 
